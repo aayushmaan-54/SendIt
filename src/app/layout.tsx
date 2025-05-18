@@ -19,7 +19,7 @@ const splineSansMono = Spline_Sans_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sendit.vercel.app"),
+  metadataBase: new URL("https://sendit-file.vercel.app"),
   title: {
     default: "SendIt - Secure, Instant File Sharing",
     template: "SendIt | %s",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: "SendIt - Secure, Instant File Sharing",
     description:
       "Share files securely in seconds with SendIt: custom links, QR codes, password & OTP protection, expiry by time or downloads, previews, and a powerful dashboard.",
-    url: "https://sendit.vercel.app",
+    url: "https://sendit-file.vercel.app",
     siteName: "SendIt",
     images: [
       {
