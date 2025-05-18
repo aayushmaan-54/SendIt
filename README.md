@@ -25,8 +25,6 @@ A powerful, privacy-focused file sharing app — upload, share, protect, and tra
 ---
 
 ## 🛠️ Tech Stack
-## 🛠️ Tech Stack
-
 - **Fullstack Framework:** [Next.js](https://nextjs.org/) (App Router, Server Actions)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Forms & Validation:** [Conform](https://conform.guide/) + [Zod](https://zod.dev/)
