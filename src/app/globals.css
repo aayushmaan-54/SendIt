@@ -1,0 +1,110 @@
+@import "tailwindcss";
+@import "uploadthing/tw/v4";
+@import "@uploadthing/react/styles.css";
+@source "../../node_modules/@uploadthing/dist";
+
+
+/* CSS Variables */
+@theme {
+  --font-splineSansMono: var(--font-splineSansMono);
+
+  --color-primary: #FFFFFF;
+  --color-secondary: #F6F6F7;
+  --color-tertiary: #F6F6F7;
+  --color-tertiary-secondary: #8E96AA24;
+  --color-quaternary: #EBEBEF;
+  --color-quaternary-hover: #E4E4E9;
+  --color-accent: #5672CD;
+  --color-accent-hover: #3A5CCC;
+  --color-accent-border: #3451B2;
+  --color-primary-text: #3C3C43;
+  --color-muted-text: #929295;
+  --color-muted-text-secondary: #67676C;
+  --color-border: #E2E2E3;
+  --color-danger: #B8272C;
+  --color-success: #18794E;
+}
+
+@layer base {
+  .dark {
+    --color-primary: #1B1B1F;
+    --color-secondary: #161618;
+    --color-tertiary: #202127;
+    --color-tertiary-secondary: #65758529;
+    --color-quaternary: #32363F;
+    --color-quaternary-hover: #414853;
+    --color-accent: #3E63DD;
+    --color-accent-hover: #5C73E7;
+    --color-accent-border: #A8B1FF;
+    --color-primary-text: #DFDFD6;
+    --color-muted-text: #98989F;
+    --color-muted-text-secondary: #6A6A71;
+    --color-border: #3C3F44;
+    --color-danger: #F66F81;
+    --color-success: #3DD68C;
+  }
+}
+
+/* Text Selection */
+::selection {
+  background-color: #3e63dd92;
+}
+
+/* Scrollbar */
+*::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: transparent
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 25px;
+  background-color: var(--color-quaternary);
+  &:hover {
+    background-color: var(--color-quaternary-hover);
+  }
+}
+
+/* Utils */
+.input {
+@apply
+    flex h-9 w-full min-w-0 rounded-md border border-border bg-transparent px-3 py-1 text-base md:text-sm
+    outline-none shadow-xs
+    transition-[color,box-shadow] duration-250
+    placeholder:text-muted-text
+    focus-visible:border-primary-text focus-visible:ring-primary-text/40 focus-visible:ring-[3px]
+    disabled:cursor-not-allowed disabled:opacity-30;
+}
+
+.button {
+  @apply
+    px-4 py-3 text-sm md:text-base rounded-md leading-none text-primary-text
+    border border-border bg-transparent shadow-xs
+    transition duration-200
+    hover:border-accent-border hover:cursor-pointer
+    disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.button-accent {
+  @apply
+    px-4 py-3 text-sm md:text-base rounded-md leading-none text-white
+    bg-accent shadow-xs
+    transition duration-200
+    hover:bg-accent-hover hover:cursor-pointer
+    disabled:cursor-not-allowed disabled:bg-accent/70;
+}
+
+.error-text {
+  @apply
+    text-xs text-danger font-medium mt-1 ml-1 leading-none;
+}
+
+.button-invert {
+  @apply
+    bg-primary-text text-primary font-medium rounded py-2 mt-4
+    transition duration-200 hover:bg-primary-text/90
+    disabled:bg-primary-text/70 disabled:cursor-not-allowed
+}
