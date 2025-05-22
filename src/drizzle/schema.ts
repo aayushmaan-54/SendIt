@@ -2,47 +2,73 @@ import {
   pgTable,
   text,
   timestamp,
-  boolean
+  boolean,
+  integer,
+  uuid
 } from "drizzle-orm/pg-core";
+
+
+
+export enum FileLinkType {
+  NORMAL = "normal",
+  FRIENDLY = "friendly",
+  CUSTOM = "custom",
+}
+
+export enum FileExpirationType {
+  TIME = "time",
+  DOWNLOAD_LIMIT = "downloadLimit",
+  ONE_TIME_DOWNLOAD = "oneTimeDownload",
+}
+
+export enum FileProtectionType {
+  PUBLIC = "public",
+  PASSWORD = "password",
+  EMAIL = "email",
+  OTP = "otp",
+}
 
 
 export const user = pgTable("user", {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
-  emailVerified: boolean('email_verified').notNull(),
+  email_verified: boolean('email_verified').notNull(),
   image: text('image'),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull()
+
+  created_at: timestamp('created_at').notNull(),
+  updated_at: timestamp('updated_at').notNull(),
 });
 
 
 export const session = pgTable("session", {
   id: text('id').primaryKey(),
-  expiresAt: timestamp('expires_at').notNull(),
+  expires_at: timestamp('expires_at').notNull(),
   token: text('token').notNull().unique(),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull(),
-  ipAddress: text('ip_address'),
-  userAgent: text('user_agent'),
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' })
-});
+  ip_address: text('ip_address'),
+  user_agent: text('user_agent'),
 
+  user_id: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+
+  created_at: timestamp('created_at').notNull(),
+  updated_at: timestamp('updated_at').notNull(),
+});
 
 export const account = pgTable("account", {
   id: text('id').primaryKey(),
-  accountId: text('account_id').notNull(),
-  providerId: text('provider_id').notNull(),
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  accessToken: text('access_token'),
-  refreshToken: text('refresh_token'),
-  idToken: text('id_token'),
-  accessTokenExpiresAt: timestamp('access_token_expires_at'),
-  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+  account_id: text('account_id').notNull(),
+  provider_id: text('provider_id').notNull(),
+  user_id: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  access_token: text('access_token'),
+  refresh_token: text('refresh_token'),
+  id_token: text('id_token'),
+  access_token_expires_at: timestamp('access_token_expires_at'),
+  refresh_token_expires_at: timestamp('refresh_token_expires_at'),
   scope: text('scope'),
   password: text('password'),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull()
+
+  created_at: timestamp('created_at').notNull(),
+  updated_at: timestamp('updated_at').notNull(),
 });
 
 
@@ -50,7 +76,33 @@ export const verification = pgTable("verification", {
   id: text('id').primaryKey(),
   identifier: text('identifier').notNull(),
   value: text('value').notNull(),
-  expiresAt: timestamp('expires_at').notNull(),
-  createdAt: timestamp('created_at'),
-  updatedAt: timestamp('updated_at')
+
+  expires_at: timestamp('expires_at').notNull(),
+
+  created_at: timestamp('created_at'),
+  updated_at: timestamp('updated_at'),
+});
+
+
+export const file = pgTable("file", {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  size: text('size').notNull(),
+  uploadThingUrl: text('upload_thing_url').notNull(),
+  uploadThingKey: text('upload_thing_key').notNull(),
+
+  file_link_type: text('file_link_type').notNull().$type<FileLinkType>().default(FileLinkType.NORMAL),
+  file_link: text('file_link').notNull(),
+
+  file_expiration_type: text('file_expiration_type').notNull().$type<FileExpirationType>().default(FileExpirationType.TIME),
+  expiration_value: integer('expiration_value').default(24).notNull(),
+
+  file_protection_type: text('file_protection_type').notNull().$type<FileProtectionType>().default(FileProtectionType.PUBLIC),
+  authorized_emails: text('authorized_emails').array(),
+  password_hash: text('password_hash'),
+
+  user_id: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+
+  created_at: timestamp('created_at').notNull(),
+  updated_at: timestamp('updated_at').notNull(),
 });

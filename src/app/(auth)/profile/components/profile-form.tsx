@@ -121,7 +121,7 @@ export default function ProfileForm({ session }: { session: SessionType }) {
         )}
         {isEditing && (
           <UploadButton
-            endpoint="imageUploader"
+            endpoint="profileUploader"
             onClientUploadComplete={(res) => {
               devLogger.log("Files: ", res);
               toast.success("Profile picture updated!");

@@ -23,17 +23,12 @@ export default function Features() {
     {
       icon: "🔒",
       heading: "Advanced File Protection",
-      description: "Passwords, email/OTP access, whitelist/block users, preview-only mode",
+      description: "Passwords, email/OTP access.",
     },
     {
       icon: "📊",
       heading: "Dashboard Insights",
       description: "View uploads/downloads, user info, IP, location, device; extend/delete files; sort/filter.",
-    },
-    {
-      icon: "👁️",
-      heading: "File Preview",
-      description: "Preview files directly with lock icon for protected files.",
     },
   ]
 

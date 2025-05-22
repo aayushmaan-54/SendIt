@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 import type { ApiResponse } from "@/common/types/api";
 import sendgrid from "@sendgrid/mail";
 import { render } from "@react-email/components";
+import { devLogger } from "../utils/dev-logger";
 
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY!);
@@ -35,7 +36,7 @@ export async function sendEmail({
       data: response,
     };
   } catch (error) {
-    console.error("Email sending failed:", error);
+    devLogger.error("Email sending failed:", error);
     return {
       success: false,
       message: "Email sending failed. Please try again later.",

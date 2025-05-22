@@ -25,14 +25,14 @@ export const metadata: Metadata = {
     template: "SendIt | %s",
   },
   description:
-    "SendIt 📤 is a lightweight file-sharing platform with instant link generation, QR codes, password protection, expiry controls, previews, and a full dashboard for managing uploads and access.",
+    "SendIt 📤 is a lightweight file-sharing platform with instant link generation, QR codes, password protection, expiry controls, and a full dashboard for managing uploads and access.",
   icons: {
     icon: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📤</text></svg>",
   },
   openGraph: {
     title: "SendIt - Secure, Instant File Sharing",
     description:
-      "Share files securely in seconds with SendIt: custom links, QR codes, password & OTP protection, expiry by time or downloads, previews, and a powerful dashboard.",
+      "Share files securely in seconds with SendIt: custom links, QR codes, password & OTP protection, expiry by time or downloads, and a powerful dashboard.",
     url: "https://sendit-file.vercel.app",
     siteName: "SendIt",
     images: [
@@ -69,8 +69,6 @@ export const metadata: Metadata = {
     "Time Based File Deletion",
     "Download Limit File",
     "File Sharing with Expiry",
-    "Online File Preview",
-    "Non-downloadable File Preview",
     "File Sharing Dashboard",
     "Track Downloads and IP",
     "File Access Logs",

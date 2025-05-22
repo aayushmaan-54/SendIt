@@ -12,7 +12,7 @@ const auth = async () => {
 };
 
 export const ourFileRouter = {
-  imageUploader: f({
+  profileUploader: f({
     "image/png": { maxFileSize: "4MB", maxFileCount: 1 },
     "image/jpeg": { maxFileSize: "4MB", maxFileCount: 1 },
     "image/webp": { maxFileSize: "4MB", maxFileCount: 1 },
@@ -23,10 +23,22 @@ export const ourFileRouter = {
       return { userId: user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      devLogger.info("Upload complete for userId:", metadata.userId);
-      devLogger.info("file url", file.ufsUrl);
+      devLogger.info("Profile Upload complete for userId:", metadata.userId);
+      devLogger.info("Profile image url", file.ufsUrl);
       return { uploadedBy: metadata.userId };
     }),
+
+
+  fileUploader: f({
+    blob: { maxFileSize: "128MB", maxFileCount: 10000 },
+  })
+    .onUploadComplete(async ({ metadata, file }) => {
+      devLogger.info("File Upload complete:", metadata);
+      devLogger.info("file", file);
+      return { metadata };
+    }),
 } satisfies FileRouter;
+
+
 
 export type OurFileRouter = typeof ourFileRouter;

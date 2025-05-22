@@ -12,7 +12,7 @@ export default function Hero() {
 
         <p className="mt-2 text-muted-text font-bold mb-5 text-base md:text-xl">Secure, Instant File Sharing</p>
 
-        <Link href="/" className="button-accent">
+        <Link href="/upload" className="button-accent">
           Get Started
         </Link>
       </section>

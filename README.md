@@ -13,14 +13,11 @@ A powerful, privacy-focused file sharing app — upload, share, protect, and tra
 - 🔒 **Advanced File Protection**
   - Password-protected downloads
   - Email or OTP-based access
-  - Email-based access control (whitelist or block users)
-  - Preview-only mode (users can view but not download)
 - 📊 **Dashboard Insights**
   - View all uploads and downloads
   - See IP address, user info (if exists), timestamp, location, and device
   - Extend file availability or delete files manually
   - Sort/filter by name, date, usage, etc.
-- 👁️ **File Preview** – Preview files directly with lock icon for protected files
 
 ---
 
