@@ -14,7 +14,7 @@ export default function CTA() {
           </p>
 
           <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center">
-            <Link href={''} className="button-accent py-2 sm:py-3 px-4 sm:px-6 rounded-md font-medium hover:opacity-90 transition-opacity text-sm sm:text-base">
+            <Link href={'/upload'} className="button-accent py-2 sm:py-3 px-4 sm:px-6 rounded-md font-medium hover:opacity-90 transition-opacity text-sm sm:text-base">
               Upload & Share Now
             </Link>
 
