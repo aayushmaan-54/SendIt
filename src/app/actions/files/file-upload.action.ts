@@ -3,18 +3,21 @@ import db from "@/common/lib/db";
 import { UploadThingResponse } from "@/common/types/components-types";
 import { devLogger } from "@/common/utils/dev-logger";
 import { AdvancedSettingsInput, advancedSettingsSchema } from "@/common/validations/file-upload.schema";
-import { file, FileLinkType, FileExpirationType, FileProtectionType } from "@/drizzle/schema";
+import { file, FileLinkType, FileExpirationType, FileProtectionType, file_share_link } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import checkAuth from "@/common/utils/check-auth";
 import { generateFriendlySlug } from "@/common/utils/url-slug";
 import slugify from "slugify";
 import { nanoid } from "nanoid";
+import { redirect } from "next/navigation";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 const MAX_ALLOWED_FILES_SIZE = Number(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB!) * 1024 * 1024;
 
 export type ActionResult = {
   status: 'success' | 'error';
   formErrors?: string[];
+  fileLink?: string;
 };
 
 
@@ -75,7 +78,7 @@ export default async function fileUploadAction(
     }
 
     const existingFile = await db.query.file.findFirst({
-      where: eq(file.file_link, fileLink)
+      where: eq(file.file_link, fileLink.toLowerCase()),
     });
 
     if (existingFile) {
@@ -86,18 +89,28 @@ export default async function fileUploadAction(
     }
 
     const session = await checkAuth();
-    const userId = session?.user.id || "anonymous";
+    const userId = session?.user?.id;
 
 
-    const allowedTypes = ["image/jpeg", "image/png", "application/pdf"]; // Example
-    const invalidFiles = uploadedFiles.filter(file => !allowedTypes.includes(file.type));
-    if (invalidFiles.length > 0) {
-      return {
-        status: "error",
-        formErrors: [`Unsupported file type(s): ${invalidFiles.map(f => f.name).join(', ')}`]
-      };
+    let authorizedEmails: string[] = [];
+    if (
+      !session
+      && advancedSettings.fileProtection.fileProtectionType === 'email'
+      || advancedSettings.fileProtection.fileProtectionType === 'otp'
+    ) {
+      const userEmail = session?.user?.email;
+      authorizedEmails = [...advancedSettings.fileProtection.providedEmails!, userEmail!];
     }
 
+
+    const [newFileShareLink] = await db
+      .insert(file_share_link)
+      .values({
+        file_share_link: fileLink.toLowerCase(),
+        created_at: new Date(),
+        updated_at: new Date()
+      })
+      .returning();
 
     for (const uploadedFile of uploadedFiles) {
       await db.insert(file).values({
@@ -106,32 +119,34 @@ export default async function fileUploadAction(
         uploadThingUrl: uploadedFile.url,
         uploadThingKey: uploadedFile.key,
         file_link_type: advancedSettings.generateLink.linkType as FileLinkType,
-        file_link: fileLink,
+        file_link: fileLink.toLowerCase(),
         file_expiration_type: advancedSettings.fileExpiry.fileExpirationType as FileExpirationType,
         expiration_value: advancedSettings.fileExpiry.expirationValue,
         file_protection_type: advancedSettings.fileProtection.fileProtectionType as FileProtectionType,
         authorized_emails: advancedSettings.fileProtection.fileProtectionType === 'email' ||
           advancedSettings.fileProtection.fileProtectionType === 'otp'
-          ? advancedSettings.fileProtection.providedEmails
+          ? authorizedEmails
           : null,
         password_hash: advancedSettings.fileProtection.fileProtectionType === 'password'
           ? advancedSettings.fileProtection.password
           : null,
-        user_id: userId,
+        user_id: userId || null,
+        file_share_link_id: newFileShareLink.id,
         created_at: new Date(),
         updated_at: new Date()
       });
     }
 
-    return {
-      status: "success",
-      formErrors: undefined
-    };
+    redirect(`/files/share/${fileLink.toLowerCase()}`);
   } catch (error) {
     devLogger.error("Unexpected error", error);
-    return {
-      status: "error",
-      formErrors: ["An unexpected error occurred. Please try again later."]
-    };
+    if (isRedirectError(error)) {
+      throw error;
+    } else {
+      return {
+        status: "error",
+        formErrors: ["An unexpected error occurred. Please try again later."]
+      };
+    }
   }
 }

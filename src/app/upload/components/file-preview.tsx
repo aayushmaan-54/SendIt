@@ -35,7 +35,7 @@ export default function FilePreview({
         <button
           type="button"
           disabled={isUploading}
-          className="size-5 rounded flex items-center justify-center transition-colors flex-shrink-0 hover:bg-muted-text/20"
+          className="size-5 rounded flex items-center justify-center transition-colors flex-shrink-0 hover:bg-muted-text/20 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={(e) => {
             e.stopPropagation();
             onRemove();

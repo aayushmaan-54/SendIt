@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import checkFileLinkAvailabilityAction from '@/app/actions/files/check-filelink-availability.action';
 import CustomRadio from '@/common/components/custom-radio';
 import uploadFileConfig from '@/common/config/upload-file-config';
 import { AdvancedSettingsProps, AdvancedSettingsState } from '@/common/types/files';
 import { getOrCreateSlug } from '@/common/utils/url-slug';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-
 
 export default function AdvancedSettings({
   fileAdvancedSettings,
@@ -13,16 +13,26 @@ export default function AdvancedSettings({
   advancedSettingsField,
   isPending,
 }: AdvancedSettingsProps) {
+  const [emailInputValue, setEmailInputValue] = useState('');
+
   const updateSetting = (key: keyof AdvancedSettingsState, value: any) => {
     onConfigChange({ [key]: value });
   };
 
 
   useEffect(() => {
+    const emails = emailInputValue.split(',')
+      .map(email => email.trim())
+      .filter(email => email);
+    updateSetting('providedEmails', emails);
+  }, [fileAdvancedSettings.fileProtectionType, emailInputValue]);
+
+
+  useEffect(() => {
     if (fileAdvancedSettings.linkType === 'custom' && !fileAdvancedSettings.fileLink) {
       updateSetting('fileLink', fileAdvancedSettings.fileLink);
     }
-  }, [fileAdvancedSettings.linkType, fileAdvancedSettings.fileLink, updateSetting]);
+  }, [fileAdvancedSettings.linkType, fileAdvancedSettings.fileLink]);
 
 
   const generateSlug = () => {
@@ -54,11 +64,32 @@ export default function AdvancedSettings({
   };
 
 
+  const handleCheckAvailability = async () => {
+    if (!fileAdvancedSettings.fileLink) {
+      toast.error("Please enter a link to check availability.");
+      return;
+    }
+    const result = await checkFileLinkAvailabilityAction(fileAdvancedSettings.fileLink);
+    if (result.exists) {
+      toast.error(`The link "${fileAdvancedSettings.fileLink}" is already taken.`);
+    } else {
+      toast.success(`The link "${fileAdvancedSettings.fileLink}" is available!`);
+    }
+  };
+
+
   const handleEmailInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
-    const emails = rawValue.split(',').map(email => email.trim()).filter(email => email);
-    updateSetting('providedEmails', emails);
+    setEmailInputValue(rawValue);
+
+    if (rawValue.endsWith(',') || rawValue.endsWith(' ')) {
+      const emails = rawValue.split(',')
+        .map(email => email.trim())
+        .filter(email => email);
+      updateSetting('providedEmails', emails);
+    }
   };
+
 
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -128,7 +159,7 @@ export default function AdvancedSettings({
                   disabled={isPending}
                   className="button-accent"
                   onClick={(e) => handleButtonClick(e, () => {
-                    // server action to check availability
+                    handleCheckAvailability();
                   })}
                 >
                   Check Availability
@@ -293,8 +324,14 @@ export default function AdvancedSettings({
               <input
                 type="text"
                 disabled={isPending}
-                value={fileAdvancedSettings.providedEmails?.join(', ') || ''}
+                value={emailInputValue}
                 onChange={handleEmailInputChange}
+                onBlur={() => {
+                  const emails = emailInputValue.split(',')
+                    .map(email => email.trim())
+                    .filter(email => email);
+                  updateSetting('providedEmails', emails);
+                }}
                 placeholder="Enter email addresses separated by commas"
                 className="input"
               />
@@ -332,8 +369,14 @@ export default function AdvancedSettings({
               <input
                 type="text"
                 disabled={isPending}
-                value={fileAdvancedSettings.providedEmails?.join(', ') || ''}
+                value={emailInputValue}
                 onChange={handleEmailInputChange}
+                onBlur={() => {
+                  const emails = emailInputValue.split(',')
+                    .map(email => email.trim())
+                    .filter(email => email);
+                  updateSetting('providedEmails', emails);
+                }}
                 placeholder="Enter email addresses separated by commas"
                 className="input"
               />

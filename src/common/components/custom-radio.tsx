@@ -31,13 +31,13 @@ export default function CustomRadio({
 
   return (
     <div
-      className="flex items-center space-x-2 cursor-pointer py-1.5 group"
+      className="flex items-center disabled:cursor-not-allowed space-x-2 cursor-pointer py-1.5 group"
       onClick={handleClick}
     >
-      <div className="relative flex items-center justify-center">
+      <div className="relative flex items-center disabled:cursor-not-allowed justify-center">
         {/* Remove the actual input element completely to avoid form submission */}
         <div
-          className={`size-5 rounded-full border-2 transition-colors duration-200 ease-in-out flex items-center justify-center
+          className={`size-5 disabled:cursor-not-allowed rounded-full border-2 transition-colors duration-200 ease-in-out flex items-center justify-center
             ${
               checked
                 ? `border-accent bg-accent`
@@ -45,11 +45,11 @@ export default function CustomRadio({
             }`}
         >
           {checked && (
-            <div className="size-3 bg-primary rounded-full absolute" />
+            <div className="size-3 bg-primary rounded-full absolute disabled:cursor-not-allowed" />
           )}
         </div>
       </div>
-      <span className="text-sm">{label}</span>
+      <span className="text-sm disabled:cursor-not-allowed">{label}</span>
     </div>
   );
 }

@@ -8,27 +8,22 @@ export default function Features() {
     {
       icon: "🔗",
       heading: "Instant Link Generation",
-      description: "Normal, friendly, or custom links.",
+      description: "Create normal (7-char), friendly (adjective-noun), or custom links.",
     },
     {
       icon: "📷",
       heading: "QR Code Sharing",
-      description: "Easily share your files via QR code.",
+      description: "Share files quickly via scannable QR codes.",
     },
     {
       icon: "⏳",
       heading: "File Expiry Control",
-      description: "Time-based, download-limit-based, or one-time download expiration.",
+      description: "Auto-expire by time, download count, or one-time access.",
     },
     {
       icon: "🔒",
       heading: "Advanced File Protection",
-      description: "Passwords, email/OTP access.",
-    },
-    {
-      icon: "📊",
-      heading: "Dashboard Insights",
-      description: "View uploads/downloads, user info, IP, location, device; extend/delete files; sort/filter.",
+      description: "Public, password, email-auth (for users), or OTP-based access.",
     },
   ]
 

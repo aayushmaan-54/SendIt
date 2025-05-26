@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useRef, useState, useEffect } from "react";
+import { useActionState, useRef, useState, useEffect, startTransition } from "react";
 import Dropzone from "./dropzone";
 import toast from "react-hot-toast";
 import Accordion from "@/common/components/accordion";
@@ -17,6 +17,7 @@ import cn from "@/common/utils/cn";
 import { AdvancedSettingsInput, advancedSettingsSchema } from "@/common/validations/file-upload.schema";
 import { devLogger } from "@/common/utils/dev-logger";
 import { useUploadThing } from "@/common/utils/uploadthing";
+import Loader from "@/common/components/loader/loader";
 
 const MAX_ALLOWED_FILES_SIZE = Number(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB!) * 1024 * 1024;
 
@@ -24,7 +25,6 @@ const MAX_ALLOWED_FILES_SIZE = Number(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB!)
 
 export default function FileUploader() {
   const [lastResult, action, isPending] = useActionState(fileUploadAction, null);
-
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
@@ -63,6 +63,15 @@ export default function FileUploader() {
       toast.error("error occurred while uploading");
     },
   });
+
+  useEffect(() => {
+    if (lastResult?.status === 'error' && lastResult.formErrors) {
+      lastResult.formErrors.forEach(error => {
+        toast.error(error);
+      });
+      setIsUploading(false);
+    }
+  }, [lastResult]);
 
 
   useEffect(() => {
@@ -187,7 +196,9 @@ export default function FileUploader() {
       submitFormData.append("uploadedFiles", JSON.stringify(uploadResult));
       submitFormData.append("advancedSettings", JSON.stringify(advancedSettings));
 
-      action(submitFormData);
+      startTransition(() => {
+        action(submitFormData);
+      });
 
       toast.success('Upload completed successfully!');
       setFiles([]);
@@ -200,6 +211,7 @@ export default function FileUploader() {
         providedEmails: [],
         password: '',
       });
+
     } catch (error) {
       devLogger.error('Form submission error:', error);
       toast.error('Upload failed. Please try again.');
@@ -259,6 +271,10 @@ export default function FileUploader() {
             </button>
           </div>
         )}
+
+
+        {(isUploading || isPending) && <Loader />}
+
 
         {/* Hidden inputs to prevent form auto-submission on radio changes */}
         <input type="hidden" name="linkType" value={fileAdvancedSettings.linkType} />

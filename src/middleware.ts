@@ -11,7 +11,6 @@ const UNAUTHENTICATED_ONLY_ROUTES = new Set([
 ]);
 
 const PROTECTED_ROUTES = new Set([
-  "/dashboard",
   "/profile",
 ]);
 
@@ -42,7 +41,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard",
     "/profile",
     "/login",
     "/sign-up",

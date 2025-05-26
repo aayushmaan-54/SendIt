@@ -22,10 +22,6 @@ export default function HeaderRight({ session }: { session: SessionType }) {
     {
       label: "Profile",
       link: '/profile',
-    },
-    {
-      label: 'Dashboard',
-      link: '/dashboard',
     }
   ];
 
